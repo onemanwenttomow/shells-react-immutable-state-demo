@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useImmer } from "use-immer";
 import styled from "styled-components";
 import Episode from "../Episode";
 import Season from "../Season";
@@ -19,11 +20,14 @@ const StyledShow = styled.div`
 `;
 
 export default function Show({ initialSeasons = [] }) {
-  const [seasons, setSeasons] = useState(initialSeasons);
+  // const [seasons, setSeasons] = useState(initialSeasons);
+  const [seasons, updateSeasons] = useImmer(initialSeasons);
 
   function handleToggleHasSeen(seasonNumber, episodeNumber) {
-    setSeasons((prevSeasons) => {
-      const season = prevSeasons.find(({ number }) => number === seasonNumber);
+    console.log("seasonNumber: ", seasonNumber);
+    console.log("episodeNumber: ", episodeNumber);
+    updateSeasons((draft) => {
+      const season = draft.find(({ number }) => number === seasonNumber);
 
       const episode = season.episodes.find(
         ({ number }) => number === episodeNumber
@@ -31,10 +35,42 @@ export default function Show({ initialSeasons = [] }) {
 
       episode.hasSeen = !episode.hasSeen;
 
-      console.log(prevSeasons);
-
-      return prevSeasons;
+      // no need to return something
     });
+
+    // setSeasons((prevSeasons) => {
+    //   return prevSeasons.map((season) => {
+    //     if (season.number !== seasonNumber) {
+    //       return season;
+    //     }
+    //     return {
+    //       ...season,
+    //       episodes: season.episodes.map((episode) => {
+    //         if (episode.number !== episodeNumber) {
+    //           return episode;
+    //         }
+    //         return {
+    //           ...episode,
+    //           hasSeen: !episode.hasSeen,
+    //         };
+    //       }),
+    //     };
+    //   });
+    // });
+
+    // setSeasons((prevSeasons) => {
+    //   const season = prevSeasons.find(({ number }) => number === seasonNumber);
+
+    //   const episode = season.episodes.find(
+    //     ({ number }) => number === episodeNumber
+    //   );
+
+    //   episode.hasSeen = !episode.hasSeen;
+
+    //   console.log("prevSeasons: ", prevSeasons);
+
+    //   return prevSeasons;
+    // });
   }
 
   return (
