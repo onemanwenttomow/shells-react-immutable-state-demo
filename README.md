@@ -1,6 +1,6 @@
-# React Component Testing: Demo End
+# React Immutable State
 
-This is the end result of the React Component Testing demo.
+- Demo
 
 ## Notes
 
